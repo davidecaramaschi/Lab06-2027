@@ -37,6 +37,40 @@ class DepositoStrumenti:
         """
         # TODO
 
+        cnx = get_connection()
+
+        if cnx is None:
+            return None
+
+        try:
+            cursor = cnx.cursor()
+            query = "SELECT * FROM strumento"
+            cursor.execute(query)
+
+            strumenti = []
+
+            for riga in cursor.fetchall():
+                strumento = Strumento(
+                    riga[0],
+                    riga[1],
+                    riga[2],
+                    riga[3],
+                    riga[4],
+                    riga[5]
+                )
+                strumenti.append(strumento)
+
+            return strumenti
+
+        except Exception as e:
+            print(e)
+            return None
+
+        finally:
+            if 'cursor' in locals():
+                cursor.close()
+            cnx.close()
+
     def cerca_strumenti_per_tipo(self, tipo) -> list[Strumento] | None:
         """
             Funzione che recupera una lista con tutti gli strumenti presenti nel database di un certo tipo
@@ -44,3 +78,37 @@ class DepositoStrumenti:
             :return: una lista con tutti gli strumenti del tipo indicato oppure None
         """
         # TODO
+
+        cnx = get_connection()
+
+        if cnx is None:
+            return None
+
+        try:
+            cursor = cnx.cursor()
+            query = "SELECT * FROM strumento WHERE tipo = %s"
+            cursor.execute(query, (tipo,))
+
+            strumenti = []
+
+            for riga in cursor.fetchall():
+                strumento = Strumento(
+                    riga[0],
+                    riga[1],
+                    riga[2],
+                    riga[3],
+                    riga[4],
+                    riga[5]
+                )
+                strumenti.append(strumento)
+
+            return strumenti
+
+        except Exception as e:
+            print(e)
+            return None
+
+        finally:
+            if 'cursor' in locals():
+                cursor.close()
+            cnx.close()
